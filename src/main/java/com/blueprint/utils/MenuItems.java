@@ -4,17 +4,13 @@ public class MenuItems {
     // if user == null -> write signup/sign in;
     //otherwise -> check your own
     public static String[] mainMenuBasicItems = {
+            "My Workouts",
+            "My Account",
+            "My Friends",
             "Top Workouts",
-            "All exercises",
+            "All Exercises",
             "All Workouts",
             "Exit"
-    };
-
-    // my workouts: show workouts and workout menu
-    public static String[] mainMenuUser = {
-            "My Workouts",
-            "My friends",
-            "My account",
     };
 
     public static String[] friendsMenu = {
