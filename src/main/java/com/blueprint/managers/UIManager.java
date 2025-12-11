@@ -10,10 +10,12 @@ public class UIManager {
 
     public void runMenu(User user){
 
-
-        for(String item : mainMenuUser){
-            System.out.println(">> " + item);
+        if(user != null){
+            for(String item : mainMenuUser){
+                System.out.println(">> " + item);
+            }
         }
+
         for(String item : mainMenuBasicItems){
             System.out.println(">> " + item);
         }
