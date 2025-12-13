@@ -1,0 +1,5 @@
+1. get input form the menu
+2. do auth from a db
+3. create tables
+user - friend
+workout - user
