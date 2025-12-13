@@ -2,6 +2,7 @@ package com.blueprint.utils;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.blueprint.constants.PasswordError;
+import com.blueprint.exceptions.HashingError;
 import com.blueprint.exceptions.NoPasswordInHashing;
 import com.blueprint.user.User;
 
@@ -84,10 +85,12 @@ public class Utilities {
         if(password == null) throw new NoPasswordInHashing("No password to the hashingPassword");
         // bcrypt accepts charArray or ByteArray
         String bcryptHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-        // verification
+        // verification that string and hashed are the same. do we really need it?
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), bcryptHashString);
 
-        return null;
+        if(result.verified) return bcryptHashString;
+        else throw new HashingError("Error during verification a password!");
     }
+
 
 }

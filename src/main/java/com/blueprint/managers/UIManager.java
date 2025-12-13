@@ -7,6 +7,10 @@ import static com.blueprint.utils.MenuItems.mainMenuBasicItems;
 
 public class UIManager {
     // menu manager
+    Managers managers;
+    public UIManager(Managers managers){
+        this.managers = managers;
+    }
 
     public void runMenu(User user){
 
@@ -57,11 +61,10 @@ public class UIManager {
             password = Utilities.getStringInput();
         }
 
-        if(login.length() > 0){
-
-            user = signIn(login, password, false);
-        } else if(email.length()){
-            user = signIn(email, password, true);
+        if(!login.isEmpty()){
+            user = managers.getUserManager().signIn(login, password, false);
+        } else if(!email.isEmpty()){
+            user = managers.getUserManager().signIn(email, password, true);
         }
 
 

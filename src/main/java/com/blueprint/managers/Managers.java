@@ -7,12 +7,19 @@ import lombok.Getter;
 
 @Getter
 public class Managers {
-    Manager userManager = new UserManager();
-    UIManager UIManager = new UIManager();
-    DbManager dbManager = new DbManager();
-    Manager exerciseManager = new ExerciseManager();
-    Manager workoutManager = new WorkoutManager();
+    UserManager userManager;
+    UIManager UIManager;
+    DbManager dbManager;
+    ExerciseManager exerciseManager;
+    WorkoutManager workoutManager;
 
+    public Managers(){
+        userManager = new UserManager(this);
+        UIManager = new UIManager(this);
+        dbManager = new DbManager(this);
+        exerciseManager = new ExerciseManager(this);
+        workoutManager = new WorkoutManager(this);
+    }
 
 
 }
