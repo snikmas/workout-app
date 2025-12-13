@@ -3,6 +3,8 @@ package com.blueprint.managers;
 import com.blueprint.user.User;
 import com.blueprint.utils.Utilities;
 
+import java.sql.SQLException;
+
 import static com.blueprint.utils.MenuItems.mainMenuBasicItems;
 
 public class UIManager {
@@ -12,7 +14,9 @@ public class UIManager {
         this.managers = managers;
     }
 
-    public void runMenu(User user){
+    public void runMenu(User user) throws SQLException {
+
+        while(true){
 
         System.out.println("Menu:");
         for(int i = 0; i < mainMenuBasicItems.length; i++){
@@ -26,16 +30,27 @@ public class UIManager {
             System.out.println("You haven't been signed in yet. Do you have an account? Y/N");
             char doHaveAccount = Utilities.getYorN();
             if(doHaveAccount == 'Y'){
-                user = singIn(user);
+                user = managers.getUIManager().signIn(user);
+                if(user != null){
+                    System.out.println("Welcome back, " + user.getNickname() + "!");
+                } else {
+                    System.out.println("The account not found");
+                    continue; // run menu again
+                }
             } else{
-                user = signUp(user);
+                user = managers.getUIManager().signUp(user);
             }
             return;
+        }
         }
 
     }
 
-    public User signIn(User user) {
+    public User signUp(User user){
+        return null;
+    }
+
+    public User signIn(User user) throws SQLException {
         // have to try to find in the ui
         System.out.println("Sign in by:\n1 - Login\n2 - email");
         int userInput = Utilities.getIntInput(1, 2);
@@ -66,6 +81,12 @@ public class UIManager {
         } else if(!email.isEmpty()){
             user = managers.getUserManager().signIn(email, password, true);
         }
+
+        if(user != null){
+            // menu like welcome
+            return user;
+        }
+        return null;
 
 
     }

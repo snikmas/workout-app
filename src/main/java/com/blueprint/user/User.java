@@ -26,4 +26,5 @@ public class User {
         this.birthday = birthday;
         this.password = password;
     }
+    User(){};
 }

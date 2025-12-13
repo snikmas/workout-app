@@ -41,10 +41,7 @@ public class DbManager {
         stat.setString(1, identifier);
         stat.setString(2, password);
 
-        ResultSet res = stat.executeQuery();
-        if(res != null){
-            return res;
-        }
+        return stat.executeQuery();
 
     }
 

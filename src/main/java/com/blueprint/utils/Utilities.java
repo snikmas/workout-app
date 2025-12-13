@@ -17,12 +17,11 @@ public class Utilities {
             System.out.print(">> ");
             if(scanner.hasNextInt()){
                 input = scanner.nextInt();
-
                 if(input <= to && input >= from){
                     return input;
                 }
-            System.out.println("Invalid input! Try again...\n");
         }
+            System.out.println("Invalid input! Try again...\n");
         }
     }
 
@@ -45,7 +44,7 @@ public class Utilities {
     public static String getStringInput(){
         String input;
         while(true){
-            System.out.println(">> ");
+            System.out.print(">> ");
             if(scanner.hasNextLine()){
                return scanner.nextLine();
             } else {
