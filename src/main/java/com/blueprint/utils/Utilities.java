@@ -1,5 +1,6 @@
 package com.blueprint.utils;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.blueprint.constants.PasswordError;
 import com.blueprint.exceptions.NoPasswordInHashing;
 import com.blueprint.user.User;
@@ -72,12 +73,19 @@ public class Utilities {
             System.out.println(PasswordError.NO_LOWERCASE.getMessage());
             return false;
         }
+        if (userInput.matches("\\\\p\\{ASCII}*")) {
+            System.out.println(PasswordError.NO_ENGLISH.getMessage());
+            return false;
+        }
         return true;
     }
 
     public static String hashingPassword(String password){
         if(password == null) throw new NoPasswordInHashing("No password to the hashingPassword");
-        String bcryptHashString = Bcrypt.
+        // bcrypt accepts charArray or ByteArray
+        String bcryptHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+        // verification
+        BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), bcryptHashString);
 
         return null;
     }
