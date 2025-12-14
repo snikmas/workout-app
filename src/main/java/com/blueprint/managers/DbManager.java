@@ -58,6 +58,8 @@ public class DbManager {
         user = Utilities.mapUser(res);
 
         if(user == null) return null;
+        log.info(user.getNickname()); // returns null..
+        log.info(user.getPassword());
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
         if(result.verified){
             log.info("usr verified!");

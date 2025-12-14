@@ -94,19 +94,21 @@ public class Utilities {
 
 
     public static User mapUser(ResultSet res){
-        User user = new User();
+        User user = null;
         try {
-            if(!res.next()) return null;
-            log.info("the res is next");
-            while(res.next()){
-                System.out.println(res.getString("login"));
-                System.out.println(res.getString("password_hash"));
+            if(res.next()) {
+                user = new User();
+                log.info("the res is not null");
+                log.info(res.toString());
+
                 user.setLogin(res.getString("login"));
                 user.setEmail(res.getString("email"));
                 user.setBirthday(res.getDate("birthday").toLocalDate());
                 user.setNickname(res.getString("nickname"));
                 user.setPassword(res.getString("password_hash"));
                 user.setCreated_at(res.getDate("created_at").toLocalDate());
+            } else {
+                log.info("No results");
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
