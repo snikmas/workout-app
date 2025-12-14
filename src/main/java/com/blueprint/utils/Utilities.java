@@ -12,9 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Utilities {
 
@@ -42,7 +40,6 @@ public class Utilities {
         while(true){
             System.out.print(">> ");
             input = scanner.nextLine().toUpperCase();
-
             if(input.equals("Y") || input.equals("N")){
                 return input.charAt(0);
             }
@@ -51,12 +48,27 @@ public class Utilities {
     }
 
 
+    public static char goToNextPrevPage(){
+        char input;
+        while(true){
+            System.out.println(">> ");
+            input = scanner.nextLine().charAt(0);
+            if(input == '>' || input == '<' || input == '0') return input;
+            System.out.println("Invalid input! Try again...");
+        }
+    }
+
     public static String getStringInput(){
         String input;
         while(true){
             System.out.print(">> ");
             if(scanner.hasNextLine()){
-               return scanner.nextLine();
+                input = scanner.nextLine();
+                if(input.isEmpty()){
+                    System.out.println("Invalid input! Try again");
+                } else {
+                    return input;
+                }
             } else {
                 System.out.println("Invalid input! Try again");
             }
@@ -181,9 +193,40 @@ public class Utilities {
                 System.out.println("- " + mg);
             }
             System.out.print("\n");
-
-
         }
     }
+
+    public static List<Category> getCategories(){
+        System.out.println("All categories:");
+        for(int i = 0; i < Category.values().length; i++){
+            System.out.println((i + 1) + " " + Category.values()[i]);
+        }
+        System.out.println("Choose categories for your plan (0 - to exit)");
+        //avoid duplicates
+        HashSet<Category> categories = new HashSet<Category>();
+        while(true){
+            int userInput = getIntInput(0, Category.values().length);
+            if(userInput == 0) break;
+            categories.add(Category.values()[userInput - 1]);
+        }
+
+        return categories.stream().toList();
+    }
+
+    public static List<MuscleGroup> getMuscleGroups(){
+        System.out.println("All muscleGroups:");
+        for(int i = 0; i < MuscleGroup.values().length; i++){
+            System.out.println((i + 1) + " " + Category.values()[i]);
+        }
+        System.out.println("Choose muscleGroups for your plan (0 - to exit)");
+        HashSet<MuscleGroup> mg = new HashSet<>();
+        while(true){
+            int userInput = getIntInput(0, MuscleGroup.values().length);
+            if(userInput == 0) break;
+            mg.add(MuscleGroup.values()[userInput - 1]);
+        }
+        return mg.stream().toList();
+    }
+
 
 }

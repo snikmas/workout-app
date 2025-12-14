@@ -10,13 +10,18 @@ public class WorkoutManager {
         this.managers = managers;
     }
 
-    public <T> T create(T data){
+    public Workout create(Workout workout){
+        if(managers.getDbManager().createWorkout(workout)){
+            return workout;
+        }
         return null;
     }
-    public <T> T update(T data){
+    public Workout update(Workout workout){
+
         return null;
     }
-    public <T> void delete (T data){
-        return;
+    public boolean delete (Workout workout)
+    {
+        return true;
     }
 }

@@ -3,6 +3,7 @@ package com.blueprint.managers;
 import com.blueprint.user.User;
 import com.blueprint.utils.Utilities;
 import com.blueprint.workout.Exercise;
+import com.blueprint.workout.Workout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.blueprint.utils.MenuItems.mainMenuBasicItems;
+import static com.blueprint.utils.MenuItems.workoutMenu;
 
 public class UIManager {
     Logger log = LoggerFactory.getLogger(UIManager.class.getSimpleName());
@@ -29,8 +31,8 @@ public class UIManager {
             for(int i = 0; i < mainMenuBasicItems.length; i++){
                 System.out.println(i  + 1 + ". " + mainMenuBasicItems[i]);
             }
-            // if !user -> u can't open 0-2
 
+            // if !user -> u can't open 0-2
             int input = Utilities.getIntInput(1, 7) - 1; //index as there
             if(user == null && input <= 2){
                 // give him option to register
@@ -57,7 +59,7 @@ public class UIManager {
             // count from 0 to 6!
             switch (input){
                 case 1 -> {
-                    System.out.println("Hii");
+                    workoutMenu(user);
                 }
                 case 4 -> {
                     List<Exercise> res = showAllExercises();
@@ -84,24 +86,37 @@ public class UIManager {
             System.out.println("There are no exercises yet!");
             return null;
         }
+        int page = 1;
         for(int i = 0; i < result.size(); i++){
             System.out.println((i + 1) + ". " + result.get(i).getTitle());
+            if(i % 10 == 0){
+                // show pages
+                System.out.println("page " + page + "/" + (result.size() +  10 - 1)/ 10);
+                System.out.println("< or > (0 to exit)");
+
+                char uInput = Utilities.goToNextPrevPage();
+                switch (uInput){
+                    case '<' -> i -= 10;
+                    case '>' -> {
+                        continue;
+                    }
+                    case '0' -> {
+                        System.out.println("Back to the menu...");
+                        return null;
+                    }
+                }
+            }
         }
         return result;
     }
 
     public User signUp(User user){
-        // 1. get credentials
-        // 2. check credentials (valid/unvalid)
-        // 3. check if exists such kind of
-        // 4. try to put to the db, check errors
         String nickname;
         String login;
         String email;
         String birthdayString;
         LocalDate birthdayDate;
         String password;
-        // + created_at
 
         System.out.println("Input your nickname:");
         nickname = Utilities.getStringInput();
@@ -201,5 +216,54 @@ public class UIManager {
             user = managers.getUserManager().signIn(email, password, true);
         }
         return user;
+    }
+
+
+    public void workoutMenu(User user){
+        for(int i = 0; i < workoutMenu.length; i++){
+            System.out.println((i + 1) + ". " + workoutMenu[i]);
+        }
+        int userInput = Utilities.getIntInput(1, 4);
+        userInput--;
+        switch (userInput){
+            case 0 -> {
+                // 0 -> show my workits
+                // 1. connect to the table users -> get user id
+                // 2. connect to the table workouts-user -> find where idUser-idWorkout, get ids
+                // 3. find those workout's ids in the workout table
+                // show. if nothing -> show it
+
+
+            }
+            case 1 -> {
+                Workout workout = new Workout();
+                log.info("creating own workout...");
+                System.out.println("Workout's title:");
+                workout.setTitle(Utilities.getStringInput());
+                System.out.println("Workout's description:");
+                workout.setDescription(Utilities.getStringInput());
+                workout.setCategories(Utilities.getCategories());
+                workout.setMuscleGroups(Utilities.getMuscleGroups());
+
+                log.info("workout field was filled; trying to upload to the db...");
+                managers.getWorkoutManager().create(workout);
+            // 1 -> create workout
+                // 1. get input workout info
+                // 2. add workout to the workout talbe
+                // 3. add workout-user id to the work-user table
+                // 4. success
+            }
+            case 2 -> {
+                // 2 -> update workout
+                // 1. find which one wanna update (shows all his accounts -> number to find)
+                // 2. find this workout from the table (for loop var), ask what wanna change and change it
+                // 3. update
+            }
+            case 3 -> {
+                // 1. shows his workouts -> which one to delete -> delete
+                // !! delete frmo the workouts table and workout-users table
+            }
+        }
+
     }
 }

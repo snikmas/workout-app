@@ -14,6 +14,5 @@ public class Workout {
     private String description;
     private List<Category> categories;
     private List<MuscleGroup> muscleGroups;
-    private int duration;
 
 }

@@ -1,16 +1,20 @@
 package com.blueprint.managers;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.blueprint.constants.Category;
+import com.blueprint.constants.MuscleGroup;
 import com.blueprint.exceptions.PropertiesError;
 import com.blueprint.user.User;
 import com.blueprint.utils.Utilities;
 import com.blueprint.workout.Exercise;
+import com.blueprint.workout.Workout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -108,6 +112,37 @@ public class DbManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean createWorkout(Workout workout){
+        try {
+            con = getConnection();
+            String statement = "INSERT INTO users (title, description, categories, musclegroups) " +
+                    "VALUES (?, ?, ?, ?)";
+
+            PreparedStatement stat = con.prepareStatement(statement);
+            stat.setString(1, workout.getTitle());
+            stat.setString(2, workout.getDescription());
+
+            List<Category> categories = workout.getCategories();
+            String[] stringCat = categories.stream()
+                    .map(Category::name)
+                    .toArray(String[]::new);
+            Array catArr = con.createArrayOf("category", stringCat);
+            stat.setArray(3, catArr);
+
+            List<MuscleGroup> mg = workout.getMuscleGroups();
+            String[] stringMg = mg.stream()
+                            .map(MuscleGroup::name)
+                            .toArray(String[]::new);
+            Array mgArr = con.createArrayOf("musclegroups", stringMg);
+            stat.setArray(4, mgArr);
+
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        log.info("looks like success");
+        return true;
     }
 
     public ResultSet getAllExercises(){

@@ -20,6 +20,7 @@ public class MenuItems {
     };
 
     public static String[] workoutMenu = {
+            "My Workouts",
             "Create Workout",
             "Update Workout",
             "Delete Workout",

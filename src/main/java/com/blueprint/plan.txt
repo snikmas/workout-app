@@ -4,3 +4,12 @@
 user - friend
 workout - user
 4. implement menu items
+
+// WORKOUT-USER TABLE
+workout_authors_ids{
+primary key
+    id workoutId,
+    id userId,
+    created at?
+
+}
