@@ -52,6 +52,9 @@ public class UserManager {
         }
 
         User user = new User(nickname, login, email, passwordHash, birthday, LocalDate.now());
+        if(managers.getDbManager().createUser(user)){
+            return user; // success;
+        }
         return null;
     }
 

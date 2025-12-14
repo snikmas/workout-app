@@ -6,6 +6,7 @@ import com.blueprint.utils.Utilities;
 
 import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.Properties;
 
 public class DbManager {
@@ -70,5 +71,28 @@ public class DbManager {
         }
     }
 
+    public boolean createUser(User user){
+        try {
+            con = getConnection();
+            String statement = "INSERT INTO users (nickname, login, email, birthday, password_hash, created_at) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
+
+            PreparedStatement stat = con
+                    .prepareStatement(statement);
+            stat.setString(1, user.getNickname());
+            stat.setString(2, user.getLogin());
+            stat.setString(3, user.getEmail());
+            stat.setDate(4, Date.valueOf(user.getBirthday()));
+            stat.setString(5, user.getPassword());
+            stat.setDate(6, Date.valueOf(user.getCreated_at()));
+
+            int res = stat.executeUpdate();
+            return res == 1; // success
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 
 }

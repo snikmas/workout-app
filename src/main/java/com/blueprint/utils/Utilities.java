@@ -1,6 +1,7 @@
 package com.blueprint.utils;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.blueprint.constants.LoginError;
 import com.blueprint.constants.PasswordError;
 import com.blueprint.exceptions.HashingError;
 import com.blueprint.exceptions.NoPasswordInHashing;
@@ -101,7 +102,7 @@ public class Utilities {
             while(res.next()){
                 user.setLogin(res.getString("login"));
                 user.setEmail(res.getString("email"));
-                user.setBirthday(res.getDate("birthday"));
+                user.setBirthday(res.getDate("birthday").toLocalDate());
                 user.setNickname(res.getString("nickname"));
                 user.setPassword(res.getString("password_hash"));
                 user.setCreated_at(res.getDate("created_at").toLocalDate());
@@ -114,6 +115,22 @@ public class Utilities {
 
     public static boolean isBirthdayInputCorrect(String birthdayString){
         return birthdayString.matches("^\\d{4}-\\d{2}-\\d{2}\\b") ;
+    }
+
+    // some bugs, later should fix it`
+    public static boolean isLoginValid(String login){
+        if(login.length() < 3 || login.length() > 20){
+            System.out.println(LoginError.INVALID_LENGTH.getMessage());
+        } else if(!login.matches(".*[A-Za-z].*")){
+            System.out.println(LoginError.NO_LETTERS.getMessage());
+        } else if (login.contains("---") || login.contains("___") || login.contains("...")){
+            System.out.println(LoginError.CONSECUTIVE_CHARACTERS.getMessage());
+        } else if(!login.matches("[a-zA-Z0-9._-]+")){
+            System.out.println(LoginError.INVALID_CHARACTER.getMessage());
+        } else {
+            return true;
+        }
+        return false;
     }
 
 }

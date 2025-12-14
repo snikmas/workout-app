@@ -78,7 +78,7 @@ public class UIManager {
 
         System.out.println("Input your login:");
         login = Utilities.getStringInput();
-        while(login.isEmpty()){
+        while(login.isEmpty() || Utilities.isLoginValid(login)){
             System.out.println("Invalid login! Try again...");
             login = Utilities.getStringInput();
         }
@@ -115,7 +115,7 @@ public class UIManager {
         }
 
         user = managers.getUserManager().signUp(nickname, login, email, password, birthdayDate);
-        return null;
+        return user;
     }
 
     public User signIn(User user) throws SQLException {
