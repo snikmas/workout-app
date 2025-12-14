@@ -1,15 +1,19 @@
 package com.blueprint.utils;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import com.blueprint.constants.LoginError;
-import com.blueprint.constants.PasswordError;
+import com.blueprint.constants.*;
 import com.blueprint.exceptions.HashingError;
 import com.blueprint.exceptions.NoPasswordInHashing;
 import com.blueprint.user.User;
+import com.blueprint.workout.Exercise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Array;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Utilities {
@@ -87,6 +91,39 @@ public class Utilities {
 
     }
 
+    public static Exercise mapExercise(ResultSet res){
+        Exercise exercise = null;
+        try {
+            if(res.next()){
+                exercise = new Exercise();
+                exercise.setTitle(res.getString("title"));
+                exercise.setDescription(res.getString("description"));
+                exercise.setDifficulty(Difficulty.valueOf(res.getString("difficulty").toUpperCase()));
+                Array categoryArr = res.getArray("category");
+                Category[] catArr = categoryArr == null ?
+                        new Category[0] : Arrays.stream((String[]) categoryArr.getArray())
+                        .map(String::toUpperCase)
+                        .map(Category::valueOf)
+                        .toArray(Category[]::new);
+
+                exercise.setCategory(catArr);
+                Array musclesArr = res.getArray("musclegroups");
+                MuscleGroup[] musArr = musclesArr == null ?
+                        new MuscleGroup[9] : Arrays.stream((String[]) musclesArr.getArray())
+                        .map(String::toUpperCase)
+                        .map(MuscleGroup::valueOf)
+                        .toArray(MuscleGroup[]::new);
+
+                exercise.setMuscleGroup(musArr);
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return exercise;
+    }
+
 
     public static User mapUser(ResultSet res){
         User user = null;
@@ -94,7 +131,6 @@ public class Utilities {
             if(res.next()) {
                 user = new User();
                 log.info("the res is not null");
-                log.info(res.toString());
 
                 user.setLogin(res.getString("login"));
                 user.setEmail(res.getString("email"));
@@ -128,6 +164,26 @@ public class Utilities {
         }
         // "" - no errors
         return "";
+    }
+
+    public static void showDetailedExerciseInfo(List<Exercise> res){
+        for(int i = 0; i < res.size(); i++){
+            Exercise ex = res.get(i);
+            System.out.println((i + 1) + ". " + ex.getTitle());
+            System.out.println("Description: " + ex.getDescription());
+            System.out.println("Difficultly: " + ex.getDifficulty());
+            System.out.println("Categories: ");
+            for(Category cat : ex.getCategory()){
+                System.out.println("- " + cat);
+            }
+            System.out.println("Muscle Groups: ");
+            for(MuscleGroup mg : ex.getMuscleGroup()){
+                System.out.println("- " + mg);
+            }
+            System.out.print("\n");
+
+
+        }
     }
 
 }

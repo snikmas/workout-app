@@ -1,5 +1,6 @@
-1. get input form the menu
-2. do auth from a db
+1. get input form the menu OK
+2. do auth from a db OK 14/12/2025
 3. create tables
 user - friend
 workout - user
+4. implement menu items

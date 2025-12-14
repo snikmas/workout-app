@@ -2,11 +2,13 @@ package com.blueprint.managers;
 
 import com.blueprint.user.User;
 import com.blueprint.utils.Utilities;
+import com.blueprint.workout.Exercise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.blueprint.utils.MenuItems.mainMenuBasicItems;
 
@@ -14,7 +16,7 @@ public class UIManager {
     Logger log = LoggerFactory.getLogger(UIManager.class.getSimpleName());
 
     // menu manager
-    Managers managers;
+    static Managers managers;
     public UIManager(Managers managers){
         this.managers = managers;
     }
@@ -52,16 +54,40 @@ public class UIManager {
                 continue;
             }
 
+            // count from 0 to 6!
             switch (input){
                 case 1 -> {
                     System.out.println("Hii");
                 }
-                case 7 -> {
+                case 4 -> {
+                    List<Exercise> res = showAllExercises();
+                    if(res != null){
+                        System.out.println("Do you want to see more details? [Y/N]");
+                        char uInput = Utilities.getYorN();
+                        if(uInput == 'Y') Utilities.showDetailedExerciseInfo(res);
+                    }
+                }
+                case 6 -> {
                     return;
                 }
             }
         }
+    }
 
+    // can show short info and full info
+    public static List<Exercise> showAllExercises(){
+        // 1. connect to the db
+        // 2. get data
+        // 3. show it
+        List<Exercise> result = managers.getExerciseManager().getAllExercises();
+        if(result == null){
+            System.out.println("There are no exercises yet!");
+            return null;
+        }
+        for(int i = 0; i < result.size(); i++){
+            System.out.println((i + 1) + ". " + result.get(i).getTitle());
+        }
+        return result;
     }
 
     public User signUp(User user){

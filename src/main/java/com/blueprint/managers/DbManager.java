@@ -4,12 +4,14 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.blueprint.exceptions.PropertiesError;
 import com.blueprint.user.User;
 import com.blueprint.utils.Utilities;
+import com.blueprint.workout.Exercise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Properties;
 
 public class DbManager {
@@ -54,8 +56,7 @@ public class DbManager {
 
         // never returns null
         ResultSet res = stat.executeQuery();
-        log.info("singInQuery (dbManager): res: " + res);
-        user = Utilities.mapUser(res);
+        user = Utilities.mapUser(res); // should not be doing here, but ok
 
         if(user == null) return null;
         BCrypt.Result result = BCrypt.verifyer().verify(user.getPassword().toCharArray(), userPassword);
@@ -107,8 +108,17 @@ public class DbManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
 
-
+    public ResultSet getAllExercises(){
+        try {
+            con = getConnection();
+            String statement = "SELECT * FROM exercises;";
+            PreparedStatement stat = con.prepareStatement(statement);
+            return stat.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

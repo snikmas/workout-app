@@ -18,7 +18,6 @@ public class Main {
 
 
         Main main = new Main();
-        // run from here
         main.run();
     }
 
