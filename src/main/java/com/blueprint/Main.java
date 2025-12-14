@@ -19,10 +19,7 @@ public class Main {
 
         Main main = new Main();
         // run from here
-        while(true){
-            main.run();
-            break;
-        }
+        main.run();
     }
 
     public void run() throws SQLException {

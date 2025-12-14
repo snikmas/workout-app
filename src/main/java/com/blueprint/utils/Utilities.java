@@ -11,12 +11,15 @@ import java.util.Scanner;
 public class Utilities {
 
     static Scanner scanner = new Scanner(System.in);
+
+    // no problems
     public static int getIntInput(int from, int to){
         int input;
         while(true){
             System.out.print(">> ");
             if(scanner.hasNextInt()){
                 input = scanner.nextInt();
+                scanner.nextLine(); // takes \n
                 if(input <= to && input >= from){
                     return input;
                 }
@@ -29,17 +32,15 @@ public class Utilities {
         String input;
         while(true){
             System.out.print(">> ");
-            if(scanner.hasNextLine()){
-                input = scanner.nextLine().toUpperCase();
-                if(input.equals("Y")){
-                    return input.charAt(0);
-                } else if(input.equals("N")){
-                    return input.charAt(0);
-                }
-                System.out.println("Invalid input! Try again...");
+            input = scanner.nextLine().toUpperCase();
+
+            if(input.equals("Y") || input.equals("N")){
+                return input.charAt(0);
             }
+            System.out.println("Invalid input! Try again...");
         }
     }
+
 
     public static String getStringInput(){
         String input;
@@ -61,19 +62,19 @@ public class Utilities {
             System.out.println(PasswordError.TOO_SHORT.getMessage());
             return false;
         }
-        if(!userInput.matches("\\d")) {
+        if(!userInput.matches(".*\\d.*")) {
             System.out.println(PasswordError.NO_DIGIT.getMessage());
             return false;
         }
-        if(!userInput.matches("\\?=[A-Z]")){
+        if(!userInput.matches(".*[A-Z].*")){
             System.out.println(PasswordError.NO_UPPERCASE.getMessage());
             return false;
         }
-        if(!userInput.matches("\\?=[a-z]")){
+        if(!userInput.matches(".*[a-z].*")){
             System.out.println(PasswordError.NO_LOWERCASE.getMessage());
             return false;
         }
-        if (userInput.matches("\\\\p\\{ASCII}*")) {
+        if (!userInput.matches("\\p{ASCII}*")) {
             System.out.println(PasswordError.NO_ENGLISH.getMessage());
             return false;
         }
