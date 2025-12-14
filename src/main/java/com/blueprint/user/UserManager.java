@@ -35,15 +35,15 @@ public class UserManager {
         String passwordHash = Utilities.hashingPassword(password);
         String statement = "";
         if(isEmail){
-            statement = "SELECT * FROM users WHERE email = ? AND password_hash = ?;";
+            statement = "SELECT * FROM users WHERE email = ?;";
         } else {
-            statement = "SELECT * FROM users WHERE login = ? AND password_hash = ?;";
+            statement = "SELECT * FROM users WHERE login = ?;";
         }
-        return managers.getDbManager().signInQuery(statement, identifier, password);
+
+        return managers.getDbManager().signInQuery(statement, identifier, passwordHash);
     }
 
     public User signUp(String nickname, String login, String email, String password, LocalDate birthday){
-        String passwordHash = Utilities.hashingPassword(password);
         // INSERT INTO A (A, B) VALUES (?, ?);
         // but firsly, check if such a user exist
         if(managers.getDbManager().userExists(login, email)){
@@ -51,7 +51,7 @@ public class UserManager {
             return null;
         }
 
-        User user = new User(nickname, login, email, passwordHash, birthday, LocalDate.now());
+        User user = new User(nickname, login, email, password, birthday, LocalDate.now());
         if(managers.getDbManager().createUser(user)){
             return user; // success;
         }

@@ -1,8 +1,11 @@
 package com.blueprint.managers;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.blueprint.exceptions.PropertiesError;
 import com.blueprint.user.User;
 import com.blueprint.utils.Utilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.sql.*;
@@ -10,6 +13,9 @@ import java.time.LocalDate;
 import java.util.Properties;
 
 public class DbManager {
+
+    Logger log = LoggerFactory.getLogger(DbManager.class.getName());
+
     Properties properties;
     Managers managers;
     Connection con;
@@ -39,16 +45,27 @@ public class DbManager {
 
     public User signInQuery(String statement, String identifier, String userPassword) throws SQLException {
         // connect tot he db
+        log.info("singInQuery runs...");
         User user;
         con = getConnection();
         PreparedStatement stat = con.prepareStatement(statement);
         stat.setString(1, identifier);
-        stat.setString(2, password);
+        log.info("singInQuery (dbManager): stat: " + stat);
 
         // never returns null
         ResultSet res = stat.executeQuery();
+        log.info("singInQuery (dbManager): res: " + res);
         user = Utilities.mapUser(res);
-        return user;
+
+        if(user == null) return null;
+        BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
+        if(result.verified){
+            log.info("usr verified!");
+            return user;
+        }
+        log.info("usr is not verified!");
+        return null;
+
     }
 
     public Connection getConnection() throws SQLException {

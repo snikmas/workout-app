@@ -40,7 +40,6 @@ public class UIManager {
                         System.out.println("Welcome back, " + user.getNickname() + "!");
                     } else {
                         System.out.println("The account not found");
-                        continue; // run menu again
                     }
                 } else {
                     user = managers.getUIManager().signUp(user);
@@ -50,8 +49,17 @@ public class UIManager {
                         System.out.println("Registration failed. Please, try again...");
                     }
                 }
-                return;
-        }
+                continue;
+            }
+
+            switch (input){
+                case 1 -> {
+                    System.out.println("Hii");
+                }
+                case 7 -> {
+                    return;
+                }
+            }
         }
 
     }
@@ -78,7 +86,7 @@ public class UIManager {
 
         System.out.println("Input your login:");
         login = Utilities.getStringInput();
-        while(login.isEmpty() || Utilities.isLoginValid(login)){
+        while(login.isEmpty() || !Utilities.isLoginValid(login).isEmpty()){
             System.out.println("Invalid login! Try again...");
             login = Utilities.getStringInput();
         }
@@ -92,8 +100,10 @@ public class UIManager {
 
         System.out.println("Input your password:");
         password = Utilities.getStringInput();
-        while(!Utilities.isPasswordValid(password)){
-            System.out.println("Try again...");
+        String msg = "";
+        msg = Utilities.isPasswordValid(password);
+        while(!msg.isEmpty()){
+            System.out.println(msg + " Try again");
             password = Utilities.getStringInput();
         }
 
@@ -130,24 +140,38 @@ public class UIManager {
             case 1 -> {
                 System.out.println("Input your login:");
                 login = Utilities.getStringInput();
+
+                while(login.isEmpty()){
+                    System.out.println("Login could not be empty. Try again");
+                    login = Utilities.getStringInput();
+                }
             } case 2 -> {
                 System.out.println("Input your email:");
                 email = Utilities.getStringInput();
             }
         }
 
-
         System.out.println("Input your password:");
         password = Utilities.getStringInput();
-        log.info(password);
-        while (!Utilities.isPasswordValid(password)){
-            System.out.println("Try again");
+        while (password.isEmpty()){ // we can let it write and later send
+            System.out.println("Password could not be empty. Try again");
             password = Utilities.getStringInput();
         }
 
+        if(!Utilities.isPasswordValid(password).isEmpty()){
+            log.info("password is not valid: got the message from isPasswordValid");
+            return null;
+        }
+
         if(!login.isEmpty()){
+            log.info("login is not empty: searching by login...");
             user = managers.getUserManager().signIn(login, password, false);
+            if(!Utilities.isLoginValid(login).isEmpty()){
+                log.info("login is not valid: got a message from isLoginValid");
+                return null;
+            }
         } else if(!email.isEmpty()){
+            log.info("email is not empty: searching by email...");
             user = managers.getUserManager().signIn(email, password, true);
         }
         return user;
