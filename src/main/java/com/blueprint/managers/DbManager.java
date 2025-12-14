@@ -58,16 +58,13 @@ public class DbManager {
         user = Utilities.mapUser(res);
 
         if(user == null) return null;
-        log.info(user.getNickname()); // returns null..
-        log.info(user.getPassword());
-        BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
+        BCrypt.Result result = BCrypt.verifyer().verify(user.getPassword().toCharArray(), userPassword);
         if(result.verified){
             log.info("usr verified!");
             return user;
         }
-        log.info("usr is not verified!");
+        log.info("usr is not verified! problem with a password");
         return null;
-
     }
 
     public Connection getConnection() throws SQLException {

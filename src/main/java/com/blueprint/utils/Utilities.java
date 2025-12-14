@@ -83,13 +83,8 @@ public class Utilities {
 
     public static String hashingPassword(String password){
         if(password == null) throw new NoPasswordInHashing("No password to the hashingPassword");
-        // bcrypt accepts charArray or ByteArray
-        String bcryptHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-        // verification that string and hashed are the same. do we really need it?
-        BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), bcryptHashString);
+        return BCrypt.withDefaults().hashToString(12, password.toCharArray());
 
-        if(result.verified) return bcryptHashString;
-        else throw new HashingError("Error during verification a password!");
     }
 
 
