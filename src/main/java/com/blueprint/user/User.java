@@ -11,20 +11,30 @@ import java.util.Date;
 public class User {
     // no need for id here. yep
     private String nickname;
-    private byte[] profileImage;
     private String login;
     private String email;
-    private Date birthday;
+    private LocalDate birthday;
     private LocalDate created_at;
     private String password; // later change ?
 
-    User(String nickname, String login, String email,
-         Date birthday, String password) {
+    User(String nickname, String login, String email, String password,
+         LocalDate birthday) {
         this.nickname = nickname;
         this.login = login;
         this.email = email;
         this.birthday = birthday;
         this.password = password;
     }
-    User(){};
+
+    User(String nickname, String login, String email, String password,
+         LocalDate birthday, LocalDate created_at) {
+        this.nickname = nickname;
+        this.login = login;
+        this.email = email;
+        this.birthday = birthday;
+        this.password = password;
+        this.created_at = created_at;
+    }
+
+    public User(){}
 }

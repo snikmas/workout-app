@@ -5,13 +5,17 @@ import com.blueprint.managers.Manager;
 import com.blueprint.managers.Managers;
 import com.blueprint.utils.Utilities;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 @Getter
 public class UserManager {
+    Logger log = LoggerFactory.getLogger(UserManager.class.getName());
 
     Managers managers;
     public UserManager(Managers managers){
@@ -35,28 +39,20 @@ public class UserManager {
         } else {
             statement = "SELECT * FROM users WHERE login = ? AND password_hash = ?;";
         }
+        return managers.getDbManager().signInQuery(statement, identifier, password);
+    }
 
-        ResultSet res = null;
-        try {
-            res = managers.getDbManager().signInQuery(statement, identifier, password);
-
-        } catch (SQLException e){
-            System.out.println(e.getErrorCode());
+    public User signUp(String nickname, String login, String email, String password, LocalDate birthday){
+        String passwordHash = Utilities.hashingPassword(password);
+        // INSERT INTO A (A, B) VALUES (?, ?);
+        // but firsly, check if such a user exist
+        if(managers.getDbManager().userExists(login, email)){
+            System.out.println("The user already exists!");
+            return null;
         }
 
-        if(res == null){
-            throw new NullResultSet("No resultSet from signIn functions");
-        }
-
-        User user = new User();
-        user.setLogin(res.getString("login"));
-        user.setEmail(res.getString("email"));
-        user.setBirthday(res.getDate("birthday"));
-        user.setNickname(res.getString("nickname"));
-        user.setPassword(res.getString("password_hash"));
-        user.setCreated_at(res.getDate("created_at").toLocalDate());
-        user.setProfileImage(res.getBytes("profile_img"));
-        return user;
+        User user = new User(nickname, login, email, passwordHash, birthday, LocalDate.now());
+        return null;
     }
 
 

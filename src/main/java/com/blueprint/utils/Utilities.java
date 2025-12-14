@@ -6,6 +6,7 @@ import com.blueprint.exceptions.HashingError;
 import com.blueprint.exceptions.NoPasswordInHashing;
 import com.blueprint.user.User;
 
+import java.sql.ResultSet;
 import java.util.Scanner;
 
 public class Utilities {
@@ -92,5 +93,27 @@ public class Utilities {
         else throw new HashingError("Error during verification a password!");
     }
 
+
+    public static User mapUser(ResultSet res){
+        User user = new User();
+        try {
+            if(!res.next()) return null;
+            while(res.next()){
+                user.setLogin(res.getString("login"));
+                user.setEmail(res.getString("email"));
+                user.setBirthday(res.getDate("birthday"));
+                user.setNickname(res.getString("nickname"));
+                user.setPassword(res.getString("password_hash"));
+                user.setCreated_at(res.getDate("created_at").toLocalDate());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return user;
+    }
+
+    public static boolean isBirthdayInputCorrect(String birthdayString){
+        return birthdayString.matches("^\\d{4}-\\d{2}-\\d{2}\\b") ;
+    }
 
 }
